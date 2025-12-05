@@ -46,12 +46,12 @@ Replace `your-app-name` with a unique name. If omitted, Heroku generates one.
 Set the required environment variables in Heroku:
 
 ```powershell
-heroku config:set MONGODB_URI="mongodb+srv://username:password@cluster.mongodb.net/clean_blog"
+heroku config:set MONGODB_URI="your_mongodb_atlas_uri"
 heroku config:set SESSION_SECRET="your_secure_random_string"
 ```
 
 **Important**: 
-- For `MONGODB_URI`, use your actual MongoDB Atlas connection string
+- For `MONGODB_URI`, use your actual MongoDB Atlas connection string (format: `mongodb+srv://[username]:[password]@[cluster].mongodb.net/[database]`)
 - For `SESSION_SECRET`, generate a strong random string:
   ```powershell
   [System.Guid]::NewGuid().ToString()
