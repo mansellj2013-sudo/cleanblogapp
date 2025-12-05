@@ -50,7 +50,8 @@ heroku config:set MONGODB_URI="your_mongodb_atlas_uri"
 heroku config:set SESSION_SECRET="your_secure_random_string"
 ```
 
-**Important**: 
+**Important**:
+
 - For `MONGODB_URI`, use your actual MongoDB Atlas connection string (format: `mongodb+srv://[username]:[password]@[cluster].mongodb.net/[database]`)
 - For `SESSION_SECRET`, generate a strong random string:
   ```powershell
@@ -66,6 +67,7 @@ git push heroku main
 ```
 
 If using `master` branch instead:
+
 ```powershell
 git push heroku master
 ```
@@ -93,7 +95,8 @@ heroku logs --tail
 ### Files Already Updated for Heroku
 
 1. **Procfile** - Tells Heroku how to start the app (`web: node index.js`)
-2. **package.json** 
+2. **package.json**
+
    - `"engines": { "node": "18.x" }` - Specifies Node version
    - `"start": "node index.js"` - Production start command
    - `"dev": "nodemon index.js"` - Local development command
@@ -104,6 +107,7 @@ heroku logs --tail
 ### Environment Variables
 
 See `.env.example` for required variables:
+
 - `MONGODB_URI`: Your MongoDB Atlas connection string
 - `SESSION_SECRET`: A random secure string for session encryption
 
@@ -130,20 +134,25 @@ After deployment, test these features:
 ## Troubleshooting
 
 ### App crashes on startup
+
 ```powershell
 heroku logs --tail
 ```
+
 Check logs for errors. Usually due to:
+
 - Missing environment variables
 - Incorrect MONGODB_URI
 - Port binding issues
 
 ### Images not loading
+
 - Verify MongoDB connection from Heroku
 - Check IMAGE model is properly referenced
 - Ensure file uploads are working
 
 ### Session/login issues
+
 - Verify SESSION_SECRET is set in Heroku Config Vars
 - Check express-session configuration
 
