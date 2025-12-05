@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('layouts/header');-%>
+
+  <body>
+    <%- include('layouts/navbar');-%>
+
+    <!-- Page Header -->
+    <header class="masthead" <% if (blogpost.imageId) { %>
+      style="background-image: url('/image/<%= blogpost.imageId %>')" <% } %> >
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="post-heading">
+              <h1><%= blogpost.title %></h1>
+              <span class="meta"
+                >Posted by <%= blogpost.userId ? blogpost.userId.username :
+                blogpost.username %> > Posted date on <%=
+                blogpost.datePosted.toDateString() %>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Post Content -->
+    <article>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto"><%- blogpost.body %></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Image Gallery -->
+    <% if (blogpost.imageId) { %>
+    <div class="container">
+      <div class="row">
+        <div
+          class="col-lg-8 col-md-10 mx-auto"
+          style="margin-top: 40px; margin-bottom: 40px"
+        >
+          <h3 style="margin-bottom: 20px">Gallery</h3>
+          <div
+            class="gallery"
+            style="display: flex; flex-wrap: wrap; gap: 15px"
+          >
+            <div
+              class="gallery-item"
+              style="flex: 1; min-width: 200px; text-align: center"
+            >
+              <img
+                src="/image/<%= blogpost.imageId._id %>"
+                alt="Post Image"
+                style="
+                  max-width: 100%;
+                  height: auto;
+                  border-radius: 5px;
+                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                  cursor: pointer;
+                "
+                onclick="openLightbox(this.src)"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div
+      id="lightbox"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        text-align: center;
+      "
+    >
+      <span
+        onclick="closeLightbox()"
+        style="
+          position: absolute;
+          top: 20px;
+          right: 30px;
+          font-size: 40px;
+          font-weight: bold;
+          color: white;
+          cursor: pointer;
+        "
+        >&times;</span
+      >
+      <img
+        id="lightboxImage"
+        src=""
+        alt="Full Size Image"
+        style="max-width: 90%; max-height: 90%; margin-top: 5%"
+      />
+    </div>
+
+    <script>
+      function openLightbox(src) {
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImage = document.getElementById("lightboxImage");
+        lightboxImage.src = src;
+        lightbox.style.display = "block";
+      }
+
+      function closeLightbox() {
+        const lightbox = document.getElementById("lightbox");
+        lightbox.style.display = "none";
+      }
+
+      // Close lightbox when clicking outside the image
+      document
+        .getElementById("lightbox")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeLightbox();
+          }
+        });
+
+      // Close lightbox on Escape key
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeLightbox();
+        }
+      });
+    </script>
+    <% } %>
+
+    <!-- Edit and Delete Buttons (only show to post owner) -->
+    <% if (req.session && req.session.userId && req.session.userId.toString()
+    === blogpost.userId._id.toString()) { %>
+    <div class="container">
+      <div class="row">
+        <div
+          class="col-lg-8 col-md-10 mx-auto"
+          style="margin-top: 20px; margin-bottom: 40px"
+        >
+          <a href="/posts/<%= blogpost._id %>/edit" class="btn btn-primary"
+            >Edit Post</a
+          >
+          <form
+            action="/posts/<%= blogpost._id %>/delete"
+            method="POST"
+            style="display: inline"
+            onsubmit="return confirm('Are you sure you want to delete this post?');"
+          >
+            <button type="submit" class="btn btn-danger">Delete Post</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <% } %>
+
+    <hr />
+
+    <%- include('layouts/footer');-%> <%- include('layouts/scripts');-%>
+  </body>
+</html>

@@ -1,0 +1,124 @@
+<%- include('layouts/header') %>
+
+  <body>
+    <%- include('layouts/navbar') %>
+
+    <!-- Page Header -->
+    <header class="masthead"
+      <% if (blogpost.imageId) { %>
+        style="background-image: url('/image/<%= blogpost.imageId._id %>')"
+      <% } %>
+    >
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="post-heading">
+              <h1>Edit Post</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main role="main" class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <% if (errors && errors.length > 0) { %>
+            <div class="alert alert-danger">
+              <ul>
+                <% errors.forEach(error => { %>
+                  <li><%= error %></li>
+                <% }) %>
+              </ul>
+            </div>
+          <% } %>
+
+          <form action="/posts/<%= blogpost._id %>/update" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="title">Title</label>
+              <input type="text" class="form-control" id="title" name="title" value="<%= formData.title || blogpost.title %>" required>
+            </div>
+
+            <div class="form-group">
+              <label for="body">Body</label>
+              <div id="editor"><%= blogpost.body %></div>
+              <textarea name="body" style="display: none;"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="image">Post Image (Optional - Images only: JPG, PNG, GIF, WebP - Max 5MB)</label>
+              <input type="file" class="form-control" id="image" name="image" accept="image/jpeg,image/png,image/gif,image/webp" onchange="validateImageFile(this)">
+              <small style="color: #666; display: block; margin-top: 5px;">
+                Supported formats: JPG, PNG, GIF, WebP. Maximum file size: 5MB
+              </small>
+              <div id="fileError" style="color: red; margin-top: 5px; display: none;"></div>
+              <% if (blogpost.imageId) { %>
+                <p style="margin-top: 10px; color: #666;">Current image attached. Upload a new image to replace it.</p>
+              <% } %>
+            </div>
+
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">Update Post</button>
+              <a href="/post/<%= blogpost._id %>" class="btn btn-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <!-- Quill Editor Setup -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+      function validateImageFile(input) {
+        const fileError = document.getElementById('fileError');
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+
+        fileError.style.display = 'none';
+        fileError.textContent = '';
+
+        if (input.files && input.files[0]) {
+          const file = input.files[0];
+
+          // Check file type
+          if (!allowedTypes.includes(file.type)) {
+            fileError.textContent = 'Invalid file type. Only JPG, PNG, GIF, and WebP are allowed.';
+            fileError.style.display = 'block';
+            input.value = '';
+            return;
+          }
+
+          // Check file size
+          if (file.size > maxSize) {
+            fileError.textContent = 'File size exceeds 5MB limit. Please choose a smaller image.';
+            fileError.style.display = 'block';
+            input.value = '';
+            return;
+          }
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var quill = new Quill('#editor', {
+          theme: 'snow',
+          toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            ['link', 'image'],
+            ['clean']
+          ]
+        });
+
+        document.querySelector('form').addEventListener('submit', function() {
+          document.querySelector('textarea[name="body"]').value = quill.root.innerHTML;
+        });
+      });
+    </script>
+
+    <%- include('layouts/footer') %>
+    <%- include('layouts/scripts') %>
+  </body>
+</html>

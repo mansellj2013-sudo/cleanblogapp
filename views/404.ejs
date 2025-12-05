@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('layouts/header');-%>
+
+  <body>
+    <%- include('layouts/navbar');-%>
+
+    <!-- Page Header -->
+    <header class="masthead" style="background-image: url('/img/post-bg.jpg')">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="page-heading">
+              <h1>404</h1>
+              <span class="subheading">Page Not Found</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <h2>Oops! The page you're looking for doesn't exist.</h2>
+          <p>
+            The page you requested could not be found. It may have been moved or
+            deleted.
+          </p>
+          <br />
+          <a href="/" class="btn btn-primary">Go Back Home</a>
+        </div>
+      </div>
+    </div>
+    <hr />
+
+    <%- include('layouts/footer');-%> <%- include('layouts/scripts');-%>
+  </body>
+</html>

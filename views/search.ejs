@@ -1,0 +1,91 @@
+<%- include('layouts/header') %>
+
+  <body>
+    <%- include('layouts/navbar') %>
+
+    <!-- Page Header -->
+    <header class="masthead" style="background-image: url('/img/home-bg.jpg')">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="site-heading">
+              <h1>Search Blog Posts</h1>
+              <span class="subheading">Find posts by title or content</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main role="main" class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <!-- Search Form -->
+          <form action="/search" method="POST" style="margin-bottom: 40px;">
+            <div class="form-group">
+              <input
+                type="text"
+                class="form-control"
+                id="query"
+                name="query"
+                placeholder="Search posts by title or content..."
+                value="<%= query %>"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="/" class="btn btn-secondary">Back to Home</a>
+          </form>
+
+          <!-- Search Results -->
+          <% if (results !== null) { %>
+            <div style="margin-bottom: 20px;">
+              <% if (query) { %>
+                <p style="color: #666;">
+                  Found <strong><%= results.length %></strong> result<%= results.length !== 1 ? 's' : '' %> for "<strong><%= query %></strong>"
+                </p>
+              <% } %>
+            </div>
+
+            <% if (results.length > 0) { %>
+              <div class="post-list">
+                <% results.forEach(post => { %>
+                  <div class="post-item" style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+                    <h3 style="margin-bottom: 10px;">
+                      <a href="/post/<%= post._id %>" style="color: #333; text-decoration: none;">
+                        <%= post.title %>
+                      </a>
+                    </h3>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 10px;">
+                      Posted by <strong><%= post.userId.username %></strong> on <strong><%= post.datePosted.toDateString() %></strong>
+                    </p>
+                    <p style="color: #555; margin-bottom: 10px;">
+                      <% 
+                        // Extract plain text from HTML and truncate to 200 characters
+                        let bodyText = post.body.replace(/<[^>]*>/g, '');
+                        if (bodyText.length > 200) {
+                          bodyText = bodyText.substring(0, 200) + '...';
+                        }
+                      %>
+                      <%= bodyText %>
+                    </p>
+                    <a href="/post/<%= post._id %>" class="btn btn-sm btn-outline-primary">Read More</a>
+                  </div>
+                <% }) %>
+              </div>
+            <% } else if (query) { %>
+              <div class="alert alert-info">
+                <p>No posts found matching "<strong><%= query %></strong>". Try a different search term.</p>
+              </div>
+            <% } %>
+          <% } %>
+        </div>
+      </div>
+    </main>
+
+    <%- include('layouts/footer') %>
+    <%- include('layouts/scripts') %>
+  </body>
+</html>

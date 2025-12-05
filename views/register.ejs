@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('layouts/header');-%>
+
+  <body>
+    <%- include('layouts/navbar');-%>
+
+    <!-- Page Header -->
+    <header class="masthead" style="background-image: url('/img/post-bg.jpg')">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="page-heading">
+              <h1>Register</h1>
+              <span class="subheading">Create a new account</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <!-- Display validation errors -->
+          <% if (errors && errors.length > 0) { %>
+            <div class="alert alert-danger" role="alert">
+              <strong>Please fix the following errors:</strong>
+              <ul>
+                <% errors.forEach(error => { %>
+                  <li><%= error %></li>
+                <% }); %>
+              </ul>
+            </div>
+          <% } %>
+
+          <form action="/register" method="POST">
+            <div class="control-group">
+              <div class="form-group floating-label-form-group controls">
+                <label>Username</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Username"
+                  id="username"
+                  name="username"
+                  value="<%= formData.username || '' %>"
+                  required
+                />
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="form-group floating-label-form-group controls">
+                <label>Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Email"
+                  id="email"
+                  name="email"
+                  value="<%= formData.email || '' %>"
+                  required
+                />
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="form-group floating-label-form-group controls">
+                <label>Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="Password"
+                  id="password"
+                  name="password"
+                  required
+                />
+              </div>
+            </div>
+            <br />
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary" id="registerButton">
+                Register
+              </button>
+            </div>
+          </form>
+          <p>Already have an account? <a href="/login">Login here</a></p>
+        </div>
+      </div>
+    </div>
+    <hr />
+
+    <%- include('layouts/footer');-%> <%- include('layouts/scripts');-%>
+  </body>
+</html>

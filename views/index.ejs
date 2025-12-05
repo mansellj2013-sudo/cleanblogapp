@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('layouts/header');-%>
+
+  <body>
+    <!-- Navigation -->
+    <%- include('layouts/navbar');-%>
+
+    <!-- Page Header -->
+    <header class="masthead" style="background-image: url('img/home-bg.jpg')">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="site-heading">
+              <h1>Training Module Support Blog</h1>
+              <span class="subheading"
+                >Use to comment on Training Modules Supplied</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <% for (var i = 0; i < blogposts.length; i++){ %>
+          <div class="post-preview">
+            <a href="/post/<%= blogposts[i]._id %>">
+              <h2 class="post-title"><%= blogposts[i].title %></h2>
+            </a>
+            <% if (blogposts[i].datePosted) { %>
+            <p class="post-meta">
+              Posted by
+              <a href="#"
+                ><%= blogposts[i].userId ? blogposts[i].userId.username :
+                blogposts[i].username %></a
+              >
+              > Posted on <%= blogposts[i].datePosted.toDateString() %>
+            </p>
+            <% } %>
+          </div>
+          <hr />
+          <%}%>
+          <!-- Pager -->
+          <div class="clearfix">
+            <a class="btn btn-primary float-right" href="#"
+              >Older Posts &rarr;</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <%- include('layouts/footer');-%> <%- include('layouts/scripts');-%>
+  </body>
+</html>
