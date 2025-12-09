@@ -43,7 +43,7 @@
 
             <div class="form-group">
               <label for="body">Body</label>
-              <div id="editor"><%= blogpost.body %></div>
+              <div id="editor"></div>
               <textarea name="body" style="display: none;"></textarea>
             </div>
 
@@ -111,6 +111,9 @@
             ['clean']
           ]
         });
+
+        // Load existing post content into editor
+        quill.root.innerHTML = `<%- blogpost.body %>`;
 
         document.querySelector('form').addEventListener('submit', function() {
           document.querySelector('textarea[name="body"]').value = quill.root.innerHTML;
