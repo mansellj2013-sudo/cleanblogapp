@@ -25,9 +25,17 @@ export const loginUser = async (req, res) => {
 
     // Store user in session
     req.session.userId = user._id;
+    req.session.userEmail = user.email;
     req.session.user = user;
 
-    res.redirect("/");
+    // Ensure session is saved before redirecting
+    req.session.save((err) => {
+      if (err) {
+        console.log("Session save error:", err);
+        return res.redirect("/login");
+      }
+      res.redirect("/");
+    });
   } catch (error) {
     console.log(error);
     res.redirect("/login");
