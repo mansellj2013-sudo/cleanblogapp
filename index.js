@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -29,6 +30,7 @@ import getPostController from "./controllers/getPost.js";
 import validateMiddleWare from "./middleware/validate.js";
 import { isAuthenticated, isNotAuthenticated } from "./middleware/auth.js";
 import notFoundController from "./controllers/notFound.js";
+import { initializeGateway } from "./config/gateway.js";
 
 app.set("view engine", "ejs");
 
@@ -42,7 +44,14 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false },
+    store: new MongoStore({
+      mongoUrl: process.env.MONGODB_URI,
+      touchAfter: 24 * 3600, // lazy session update (in seconds)
+    }),
+    cookie: { 
+      secure: false, // set to true if using HTTPS in production
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    },
   })
 );
 app.use("/posts/store", validateMiddleWare);
@@ -100,6 +109,9 @@ app.get("/image/:id", async (req, res) => {
     res.status(500).send("Error retrieving image");
   }
 });
+
+// Initialize gateway to second application
+initializeGateway(app);
 
 // Catch-all route for 404 errors (must be at the end)
 app.use(notFoundController);
