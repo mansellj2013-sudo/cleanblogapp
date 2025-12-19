@@ -18,6 +18,8 @@ export const loginUser = async (req, res) => {
       // Log all users in database for debugging
       const allUsers = await User.find({}, { email: 1 });
       console.log("[LOGIN] All users in DB:", allUsers.map(u => ({ email: u.email, length: u.email.length })));
+      return res.redirect("/login");
+    }
 
     console.log("[LOGIN] User found:", user.email);
 
