@@ -17,6 +17,9 @@ mongoose.connect(process.env.MONGODB_URI);
 
 const app = new express();
 
+// Trust Heroku proxy for secure cookies
+app.set("trust proxy", 1);
+
 import fileUpload from "express-fileupload";
 
 import newPostController from "./controllers/newPost.js";

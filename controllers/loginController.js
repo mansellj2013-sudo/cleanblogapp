@@ -67,7 +67,8 @@ export const loginUser = async (req, res) => {
         "[LOGIN] Session saved successfully. SessionID:",
         req.sessionID
       );
-      console.log("[LOGIN] Redirecting to home.");
+      console.log("[LOGIN] About to redirect to /");
+      // Force express-session to send Set-Cookie header
       res.redirect("/");
     });
   } catch (error) {
