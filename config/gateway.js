@@ -56,38 +56,6 @@ export const initializeGateway = (app) => {
         // Log proxied requests
         console.log(`[GATEWAY] ${req.method} ${req.originalUrl} -> ${req.url}`);
       },
-      onProxyRes: (proxyRes, req, res) => {
-        // Rewrite HTML response to fix asset paths
-        // Prepend /app to all absolute paths in the response
-        const contentType = proxyRes.headers["content-type"] || "";
-        
-        if (contentType.includes("text/html")) {
-          // Store the original write function
-          const originalWrite = res.write;
-          const chunks = [];
-
-          // Override write to capture response chunks
-          res.write = function(chunk, ...args) {
-            chunks.push(chunk);
-            return originalWrite.apply(res, [chunk, ...args]);
-          };
-
-          // Rewrite paths on response end
-          const originalEnd = res.end;
-          res.end = function(chunk, ...args) {
-            if (chunk) chunks.push(chunk);
-            
-            // Combine all chunks and rewrite paths
-            const html = Buffer.concat(chunks).toString("utf-8");
-            const rewrittenHtml = html
-              .replace(/href="\/(?!\/)/g, 'href="/app/')
-              .replace(/src="\/(?!\/)/g, 'src="/app/')
-              .replace(/action="\/(?!\/)/g, 'action="/app/');
-
-            return originalEnd.apply(res, [rewrittenHtml, ...args]);
-          };
-        }
-      },
     })
   );
 
