@@ -63,7 +63,10 @@ export const loginUser = async (req, res) => {
         console.log("[LOGIN] Redirecting to login due to session save error");
         return res.redirect("/login");
       }
-      console.log("[LOGIN] Session saved successfully. SessionID:", req.sessionID);
+      console.log(
+        "[LOGIN] Session saved successfully. SessionID:",
+        req.sessionID
+      );
       console.log("[LOGIN] Redirecting to home.");
       res.redirect("/");
     });

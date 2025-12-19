@@ -74,6 +74,15 @@ app.use(
     },
   })
 );
+
+// Session debug middleware
+app.use((req, res, next) => {
+  console.log(
+    `[SESSION] Request to ${req.method} ${req.path} - SessionID: ${req.sessionID}, userId: ${req.session.userId}`
+  );
+  next();
+});
+
 app.use("/posts/store", validateMiddleWare);
 
 // listen on port from environment variable or default to 4000
