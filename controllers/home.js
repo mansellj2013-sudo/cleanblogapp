@@ -9,7 +9,7 @@ export default async (req, res) => {
     userEmail: req.session.userEmail,
     hasSession: !!req.session,
   });
-  
+
   const blogposts = await BlogPost.find({}).populate("userId");
   res.render("index", {
     blogposts,

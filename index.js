@@ -59,19 +59,22 @@ app.use(fileUpload());
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     store: new MongoStore({
       mongoUrl: process.env.MONGODB_URI,
       autoRemove: "interval",
       autoRemoveInterval: 10, // remove expired sessions every 10 minutes
+      ttl: 24 * 60 * 60, // 24 hours
     }),
     cookie: {
       secure: process.env.NODE_ENV === "production" ? true : false,
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
       sameSite: "lax",
+      path: "/",
     },
+    name: "sessionId",
   })
 );
 
@@ -80,6 +83,17 @@ app.use((req, res, next) => {
   console.log(
     `[SESSION] Request to ${req.method} ${req.path} - SessionID: ${req.sessionID}, userId: ${req.session.userId}`
   );
+  
+  // Log response headers
+  const originalSend = res.send;
+  res.send = function(data) {
+    const cookieHeader = res.getHeader("set-cookie");
+    if (cookieHeader) {
+      console.log(`[SESSION] Set-Cookie header for ${req.path}:`, cookieHeader);
+    }
+    return originalSend.call(this, data);
+  };
+  
   next();
 });
 
