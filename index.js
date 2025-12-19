@@ -59,11 +59,12 @@ app.use(fileUpload());
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     store: new MongoStore({
       mongoUrl: process.env.MONGODB_URI,
-      touchAfter: 24 * 3600, // lazy session update (in seconds)
+      autoRemove: "interval",
+      autoRemoveInterval: 10, // remove expired sessions every 10 minutes
     }),
     cookie: {
       secure: process.env.NODE_ENV === "production" ? true : false,
