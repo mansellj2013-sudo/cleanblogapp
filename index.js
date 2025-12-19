@@ -83,17 +83,17 @@ app.use((req, res, next) => {
   console.log(
     `[SESSION] Request to ${req.method} ${req.path} - SessionID: ${req.sessionID}, userId: ${req.session.userId}`
   );
-  
+
   // Log response headers
   const originalSend = res.send;
-  res.send = function(data) {
+  res.send = function (data) {
     const cookieHeader = res.getHeader("set-cookie");
     if (cookieHeader) {
       console.log(`[SESSION] Set-Cookie header for ${req.path}:`, cookieHeader);
     }
     return originalSend.call(this, data);
   };
-  
+
   next();
 });
 
