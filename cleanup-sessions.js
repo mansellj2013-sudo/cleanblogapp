@@ -22,11 +22,21 @@ async function cleanupSessions() {
     } catch (indexError) {
       console.log("Index may not exist:", indexError.message);
     }
-    
+
     // List remaining sessions
     const count = await sessionsCollection.countDocuments();
     console.log(`Remaining sessions: ${count}`);
-    
+
     // List all indexes
     const indexes = await sessionsCollection.getIndexes();
     console.log("Current indexes:", Object.keys(indexes));
+
+    await mongoose.disconnect();
+    console.log("Cleanup complete");
+  } catch (error) {
+    console.error("Error:", error);
+    process.exit(1);
+  }
+}
+
+cleanupSessions();
