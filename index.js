@@ -38,6 +38,23 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Request logging middleware
+app.use((req, res, next) => {
+  if (
+    req.method === "POST" ||
+    req.path.includes("login") ||
+    req.path.includes("register")
+  ) {
+    console.log(
+      `[REQUEST] ${req.method} ${req.path} - Body keys: ${Object.keys(
+        req.body
+      ).join(", ")}`
+    );
+  }
+  next();
+});
+
 app.use(fileUpload());
 app.use(
   session({
@@ -48,7 +65,7 @@ app.use(
       mongoUrl: process.env.MONGODB_URI,
       touchAfter: 24 * 3600, // lazy session update (in seconds)
     }),
-    cookie: { 
+    cookie: {
       secure: process.env.NODE_ENV === "production" ? true : false,
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
