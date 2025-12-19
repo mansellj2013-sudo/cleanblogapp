@@ -7,14 +7,17 @@ export const showLogin = (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
-    console.log("[LOGIN] Attempting login for email:", req.body.email);
-    
-    const user = await User.findOne({ email: req.body.email });
+    const email = (req.body.email || "").trim().toLowerCase();
+    console.log("[LOGIN] Attempting login - Raw email:", JSON.stringify(req.body.email), "Trimmed/lower:", email, "Length:", email.length);
+
+    // Try case-insensitive search
+    const user = await User.findOne({ email: { $regex: "^" + email + "$", $options: "i" } });
 
     if (!user) {
-      console.log("[LOGIN] User not found:", req.body.email);
-      return res.redirect("/login");
-    }
+      console.log("[LOGIN] User not found with email:", email);
+      // Log all users in database for debugging
+      const allUsers = await User.find({}, { email: 1 });
+      console.log("[LOGIN] All users in DB:", allUsers.map(u => ({ email: u.email, length: u.email.length })));
 
     console.log("[LOGIN] User found:", user.email);
 
