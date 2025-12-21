@@ -47,17 +47,24 @@ export const initializeGateway = (app) => {
       logLevel: "info",
       timeout: 120000, // 120 seconds timeout for socket
       proxyTimeout: 120000, // 120 seconds timeout for proxy response
-      buffer: false, // Stream request body directly instead of buffering
+      buffer: false, // Stream request body directly
+      followRedirects: false,
+      onProxyReq: (proxyReq, req, res) => {
+        // Ensure Content-Length is set if body exists
+        if (req.body) {
+          const bodyData = JSON.stringify(req.body);
+          proxyReq.setHeader("Content-Length", Buffer.byteLength(bodyData));
+          proxyReq.write(bodyData);
+        }
+        // Log proxied requests
+        console.log(`[GATEWAY] ${req.method} ${req.originalUrl} -> ${req.url}`);
+      },
       onError: (err, req, res) => {
         console.error("Proxy error:", err);
         res.status(502).json({
           error: "Bad Gateway",
           message: "Unable to reach the second application",
         });
-      },
-      onProxyReq: (proxyReq, req, res) => {
-        // Log proxied requests
-        console.log(`[GATEWAY] ${req.method} ${req.originalUrl} -> ${req.url}`);
       },
     })
   );
