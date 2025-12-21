@@ -45,6 +45,9 @@ export const initializeGateway = (app) => {
       },
       ws: true, // Enable WebSocket support if needed
       logLevel: "info",
+      timeout: 120000, // 120 seconds timeout for socket
+      proxyTimeout: 120000, // 120 seconds timeout for proxy response
+      buffer: false, // Stream request body directly instead of buffering
       onError: (err, req, res) => {
         console.error("Proxy error:", err);
         res.status(502).json({
