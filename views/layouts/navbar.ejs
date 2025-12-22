@@ -31,11 +31,11 @@
         <li class="nav-item">
           <a class="nav-link" href="/">Home</a>
         </li>
+        <% if (typeof req !== 'undefined' && req.session && req.session.userId)
+        { %>
         <li class="nav-item">
           <a class="nav-link" href="/app/">Quiz App</a>
         </li>
-        <% if (typeof req !== 'undefined' && req.session && req.session.userId)
-        { %>
         <li class="nav-item">
           <a class="nav-link" href="/posts/new">New Post</a>
         </li>
